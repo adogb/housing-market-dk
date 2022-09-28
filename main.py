@@ -6,6 +6,10 @@ import datetime
 
 # GATHERING DATA
 
+url = 'https://www.boliga.dk/resultat?zipCodes=2720'
+r = requests.get(url)
+content = r.content
+soup = BeautifulSoup(content)
 
 
 # Fetch current HTML content from website (day 1) using Requests module
