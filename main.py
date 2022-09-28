@@ -1,5 +1,15 @@
-# Fetch current HTML content from website (day 1)
-# Extract relevant data from each listing and put in a dataframe
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+import re
+import datetime
+
+# GATHERING DATA
+
+
+
+# Fetch current HTML content from website (day 1) using Requests module
+# Extract (scrape) relevant data from each listing with BeautifulSoup and put in a dataframe
 # Clean the data
 # Create a database MySQL / or CSV file?
 # Each day
