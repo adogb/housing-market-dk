@@ -1,7 +1,7 @@
 from operator import is_
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 import re
 import datetime
 
@@ -12,8 +12,16 @@ r = requests.get(url)
 content = r.content
 soup = BeautifulSoup(content, "lxml")
 
-## Extract (scrape) relevant data from each listing with BeautifulSoup and put in a dataframe
-## ngb-carousel and swiper tags contain the listings in the top carrousel so we need to ignore them. We also ignore non-public listings ("skuffesag")
+## Creating timestamp
+now = datetime.datetime.now()
+retrieved = now.strftime(("%Y-%m-%d %H:%M:%S"))
+
+## Remove comments
+comments = soup.find_all(lambda x: isinstance(x, Comment))
+for comment in comments:
+  soup.extract(comment)
+
+## Extract (scrape) relevant data from each listing with BeautifulSoup
 def is_relevant_listing(tag): 
   # find names of tag parents by mapping
   parentsNames = list(map((lambda x: x.name), tag.parents))
@@ -23,7 +31,12 @@ def is_relevant_listing(tag):
 
 tag_list=soup.find_all(is_relevant_listing)
 
+## Making list of dictionaries to name data, and to later make a dataframe
+
+
 # Clean the data
+
+
 # Create a database MySQL / or CSV file?
 # Each day
 #   Fetch new offers on the website
