@@ -6,22 +6,23 @@ import re
 import datetime
 
 # GATHERING DATA
-
+## Fetch current HTML content from website (day 1) using Requests module
 url = 'https://www.boliga.dk/resultat?zipCodes=2720'
 r = requests.get(url)
 content = r.content
 soup = BeautifulSoup(content, "lxml")
 
-def is_relevant_listing(tag):
+## Extract (scrape) relevant data from each listing with BeautifulSoup and put in a dataframe
+## ngb-carousel and swiper tags contain the listings in the top carrousel so we need to ignore them. We also ignore non-public listings ("skuffesag")
+def is_relevant_listing(tag): 
   # find names of tag parents by mapping
   parentsNames = list(map((lambda x: x.name), tag.parents))
-  return tag.name == "app-housing-list-item" and not "ngb-carousel" in parentsNames
-#tag_list=soup.find("app-housing-list-results").div.div.next_sibling.find_all("app-housing-list-item")
-tag_list=soup.find_all(is_relevant_listing)
-print(tag.a for tag in tag_list)
+  is_not_public = tag.find("app-listing-information-hidden")
 
-# Fetch current HTML content from website (day 1) using Requests module
-# Extract (scrape) relevant data from each listing with BeautifulSoup and put in a dataframe
+  return (tag.name == "app-housing-list-item") and not ("ngb-carousel" in parentsNames) and not ("swiper" in parentsNames) and not is_not_public
+
+tag_list=soup.find_all(is_relevant_listing)
+
 # Clean the data
 # Create a database MySQL / or CSV file?
 # Each day
