@@ -1,11 +1,13 @@
-
+# %%
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup, Comment
 import re
 import datetime
 
+# %%
 # GATHERING DATA
+
 ## Fetch current HTML content from website (day 1) using Requests module
 url = 'https://www.boliga.dk/resultat?zipCodes=2720'
 r = requests.get(url)
@@ -16,11 +18,13 @@ soup = BeautifulSoup(content, "lxml")
 now = datetime.datetime.now()
 retrieved = now.strftime(("%Y-%m-%d %H:%M:%S"))
 
+# %%
 ## Remove comments
 comments = soup.find_all(string=lambda x: isinstance(x, Comment))
 for comment in comments:
   comment.extract()
 
+# %%
 ## Extract (scrape) relevant data from each listing with BeautifulSoup
 def is_relevant_listing(tag): 
   # find names of tag parents by mapping
@@ -31,15 +35,15 @@ def is_relevant_listing(tag):
 
 tag_list=soup.find_all(is_relevant_listing)
 
+# %% 
 ## Making list of dictionaries to name data, and to later make a dataframe
 data_list = []
 for tag in tag_list:     
-  # dividing listing container in top, middle and bottom parts for code readability
+  # structuring for code readability
   top_info = tag.find("app-listing-information-lg").div.div
   middle_info = top_info.next_sibling.next_sibling.div.div
   bottom_info = tag.find(class_="house-details-blocks")
   
-  # information scraping
   link = tag.a['href']
   address=top_info.div.div.span.string
   #print(address)
@@ -76,11 +80,16 @@ for tag in tag_list:
       "date_added": date_added,
       "retrieved": retrieved
   })
-print(data_list[0])
 
-# Clean the data
+# %%
+# CLEANING DATA
+## putting in a dataframe to use pandas for cleaning
+df_original = pd.DataFrame(data_list)
+df = df_original.copy()
 
-
+# %%
+df["id"] = df["link"].str.split("/").str[2]
+print(df.head())
 # Create a database MySQL / or CSV file?
 # Each day
 #   Fetch new offers on the website
@@ -89,3 +98,5 @@ print(data_list[0])
 #     Compare list to sold housing page? Or Look for listings that are not there
 #     anymore?
 
+
+# %%
