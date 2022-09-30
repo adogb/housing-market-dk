@@ -1,5 +1,9 @@
 # Jupyter Notebook
 .ipynb_checkpoints
+.ipynb
 
 # Power BI
 *.pbix
+
+# Source code HTML
+*sourceCode*
