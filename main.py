@@ -88,15 +88,17 @@ df["id"] = df["link"].str.split("/").str[2]
 # %% remove all leading and trailing whitespace
 df = df.apply(lambda col: col.str.strip())
 
-# %%
+# %% cleaning strings
 df.address = df.address.str.rstrip(",")
-df.price = df.price.str.rstrip(" kr.").str.replace(".","")
-df.price_per_m2 = df.price_per_m2.str.rstrip(" kr. / m²").str.replace(".","")
-df.area = df.area.str.rstrip(" m²")
-df.monthly_cost = df.monthly_cost.str.rstrip(" kr. / md.")\
-                                .str.lstrip("Ejerudgift: ").str.replace(".","")
-df.rooms = df.rooms.str.lstrip("Værelser: ").str.rstrip(" værelse")
-df.ground_area = df.ground_area.str.rstrip(" m²").str.replace(".","")
+df.energy_label = df.energy_label.str.replace("Energimærke: ", "")
+# %% cleaning numeric values
+df.price = df.price.str.replace(" kr.","").str.replace(".","")
+df.price_per_m2 = df.price_per_m2.str.replace(" kr. / m²","").str.replace(".","")
+df.area = df.area.str.replace(" m²","")
+df.monthly_cost = df.monthly_cost.str.replace(" kr. / md.","")\
+                                .str.replace("Ejerudgift: ","").str.replace(".","")
+df.rooms = df.rooms.str.replace("Værelser: ","").str.replace(" værelse","")
+df.ground_area = df.ground_area.str.replace(" m²","").str.replace(".","")
 
 numeric_columns = ["price","price_per_m2","area","rooms", "ground_area", 
                    "year_built", "monthly_cost"]
