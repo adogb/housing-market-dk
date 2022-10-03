@@ -80,29 +80,28 @@ for tag in tag_list:
 df_original = pd.DataFrame(data_list)
 df = df_original.copy()
 
-# %%
+# %% creating column id
 df["id"] = df["link"].str.split("/").str[2]
 
-# %% remove comma and space at the end of address values
-df.address = df.address.str.rstrip(", ")
+# %% remove all leading and trailing whitespace
+df = df.apply(lambda col: col.str.strip())
 
-# %% extract numbers from strings for relevant columns
-df.price = df.price.str.strip().str.rstrip(" kr.").str.replace(".","").astype(int)
+# %%
+df.address = df.address.str.rstrip(",")
+df.price = df.price.str.rstrip(" kr.").str.replace(".","")
+df.price_per_m2 = df.price_per_m2.str.rstrip(" kr. / m²").str.replace(".","")
+df.area = df.area.str.rstrip(" m²")
+df.monthly_cost = df.monthly_cost.str.rstrip(" kr. / md.")\
+                                .str.lstrip("Ejerudgift: ").str.replace(".","")
+df.rooms = df.rooms.str.lstrip("Værelser: ").str.rstrip(" værelse")
+df.ground_area = df.ground_area.str.rstrip(" m²").str.replace(".","")
 
-df.price_per_m2 = df.price_per_m2.str.strip().str.rstrip(" kr. / m²").str.replace(".","").astype(int)
-
-df.area = df.area.str.strip().str.rstrip(" m²").astype(int)
-
-df.monthly_cost = df.monthly_cost.str.strip().str.rstrip(" kr. / md.")\
-                                .str.lstrip("Ejerudgift: ").str.replace(".","").astype(int)
-
-df.rooms = df.rooms.str.strip().str.lstrip("Værelser: ").str.rstrip(" værelse").astype("int")
-
-df.ground_area = df.ground_area.str.strip().str.rstrip(" m²").str.replace(".","").astype(int)
+numeric_columns = ["price","price_per_m2","area","rooms", "ground_area", 
+                   "year_built", "monthly_cost"]
+df[numeric_columns] = df[numeric_columns].apply(lambda col: col.astype(int))
 
 
 # %%
-# print(df.ground_area)
 # Create a database MySQL / or CSV file?
 # Each day
 #   Fetch new offers on the website
