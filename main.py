@@ -6,6 +6,8 @@ import requests
 from bs4 import BeautifulSoup, Comment
 import re
 import datetime
+import mysql.connector
+from mysql.connector import Error
 
 # %% GATHERING DATA
 ## Fetch current HTML content from website (day 1) using Requests module
@@ -120,9 +122,9 @@ df["date_added"] = df["date_added"].astype("datetime64[ns]")
 
 df["retrieved"] = df["retrieved"].astype("datetime64[ns]")
 
+# %% Create a database MySQL / or CSV file?
+df.to_csv("20221008_listings", index=False)
 
-# %%
-# Create a database MySQL / or CSV file?
 # Each day
 #   Fetch new offers on the website
 #   Extract relevant data from each listing and put in database
