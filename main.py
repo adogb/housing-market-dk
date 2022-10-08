@@ -95,10 +95,13 @@ df.address = df.address.str.rstrip(",")
 df.energy_label = df.energy_label.str.replace("Energimærke: ", "")
 # %% cleaning numeric values
 df.price = df.price.str.replace(" kr.","").str.replace(".","")
-df.price_per_m2 = df.price_per_m2.str.replace(" kr. / m²","").str.replace(".","")
+df.price_per_m2 = df.price_per_m2.str.replace(" kr. / m²","")\
+                                  .str.replace(".","")
 df.area = df.area.str.replace(" m²","")
 df.monthly_cost = df.monthly_cost.str.replace(" kr. / md.","")\
-                                .str.replace("Ejerudgift: ","").str.replace(".","")
+                                .str.replace("Ejerudgift: ","")\
+                                .str.replace("Boligydelse: ","")\
+                                .str.replace(".","")
 df.rooms = df.rooms.str.replace("Værelser: ","").str.replace(" værelse","")
 df.ground_area = df.ground_area.str.replace(" m²","").str.replace(".","")
 
