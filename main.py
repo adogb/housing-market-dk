@@ -11,7 +11,7 @@ from mysql.connector import Error
 
 # %% GATHERING DATA
 ## Fetch current HTML content from website (day 1) using Requests module
-url = 'https://www.boliga.dk/resultat?zipCodes=2720'
+url = 'https://www.boliga.dk/resultat?zipCodes=2720&sort=daysForSale-a'
 r = requests.get(url)
 content = r.content
 soup = BeautifulSoup(content, "lxml")
