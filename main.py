@@ -80,6 +80,8 @@ for tag in tag_list:
       "retrieved": retrieved
   })
 
+pages_count = soup.find("app-housing-list-results").find("app-pagination").find("div", class_="nav-right").a.string
+
 # %% CLEANING DATA
 df_original = pd.DataFrame(data_list)
 df = df_original.copy()
