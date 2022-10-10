@@ -124,13 +124,16 @@ df.ground_area = df.ground_area.str.replace(" m²","").str.replace("\.","")
 
 numeric_columns = ["price","price_per_m2","area","rooms", "ground_area", 
                    "year_built", "monthly_cost"]
-df[numeric_columns] = df[numeric_columns].apply(lambda col: col.astype(int))
+df[numeric_columns] = df[numeric_columns].apply(lambda col: pd.to_numeric(col, errors="coerce")\
+                                          .fillna(0).astype(int)) 
+# to replace the non-numbers/missing info with 0
 
 # %% cleaning date values
 def convert_to_date_string(str):
-  arr = str.replace("Oprettet ","").split(". ")
+  arr = str.replace("Oprettet ","").replace(".","").split(" ")
   if (len(arr[0])==1): 
     arr[0] = "0" + arr[0] # adding a 0 to numbers from 1 to 9
+  
   months_conversion = {"jan": "01", "feb": "02", "mar": "03", "apr": "04",
     "maj": "05", "jun": "06", "jul": "07", "aug": "08", "sep":"09", "okt": "10",
     "nov": "11", "dec": "12"}
