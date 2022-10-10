@@ -25,7 +25,7 @@ def is_relevant_listing(tag):
 
   return (tag.name == "app-housing-list-item") and not ("ngb-carousel" in parentsNames) and not ("swiper" in parentsNames) and not is_not_public
 
-def append_to_dictlist(tag_list):
+def append_to_dictlist(tag_list, dict_list):
   for tag in tag_list:     
     # structuring for code readability
     top_info = tag.find("app-listing-information-lg").div.div
@@ -70,23 +70,32 @@ def append_to_dictlist(tag_list):
     })
 
 # %% GATHERING DATA
-## Fetch current HTML content from website (day 1) using Requests module
+dict_list = []
+
+## Fetch current HTML content from website (day 1)
 url = 'https://www.boliga.dk/resultat?zipCodes=2720&sort=daysForSale-a&page=1'
 soup = scrape_page(url)
+remove_comments(soup)
 
 ## Creating timestamp
-now = datetime.datetime.now()
-retrieved = now.strftime(("%Y-%m-%d %H:%M:%S"))
+retrieved = datetime.datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
 
-# %% Extract (scrape) relevant data from each listing with BeautifulSoup
+## Extract relevant data from each listing
 tag_list=soup.find_all(is_relevant_listing)
 
-# %% Making list of dictionaries to name data, and to later make a dataframe
-dict_list = []
-append_to_dictlist(tag_list)
+## Making list of dictionaries to name data
+append_to_dictlist(tag_list, dict_list)
 
-#%%
-pages_count = soup.find("app-housing-list-results").find("app-pagination").find("div", class_="nav-right").a.string
+# %%
+pages_count = int(soup.find("app-housing-list-results").find("app-pagination").find("div", class_="nav-right").a.string)
+
+for page_num in range(2, pages_count+1):
+  url= 'https://www.boliga.dk/resultat?zipCodes=2720&sort=daysForSale-a&page={num}'.format(num=page_num)
+  soup = scrape_page(url)
+  remove_comments(soup)
+  retrieved = datetime.datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
+  tag_list=soup.find_all(is_relevant_listing)
+  append_to_dictlist(tag_list, dict_list)
 
 # %% CLEANING DATA
 df_original = pd.DataFrame(dict_list)
