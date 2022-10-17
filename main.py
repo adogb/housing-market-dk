@@ -45,8 +45,7 @@ def append_to_dictlist(tag_list, dict_list):
     ground_area = bottom_info.contents[4].span.string
     monthly_cost = bottom_info.contents[5].span.string
     
-    # appending data dictionnary to dict_list. BeautifulSoup converts HTML non-breaking spaces (&nbsp) to \xa0 (unicode),
-    # so we need to remove them.
+    # appending data dictionnary to dict_list. BeautifulSoup converts HTML non-breaking spaces (&nbsp) to \xa0 (unicode), so we need to remove them.
     dict_list.append({
         "link": link,
         "address": str(address).replace(u'\xa0', u' '),
@@ -99,10 +98,10 @@ for page_num in range(2, pages_count+1):
 df_original = pd.DataFrame(dict_list)
 df = df_original.copy()
 
-df["id"] = df["link"].str.split("/").str[2] # creating column id
+df["id"] = df["link"].str.split("/").str[2]
 df["status"] = "online"
 
-df = df.apply(lambda col: col.str.strip()) # remove leading and trailing whitespace
+df = df.apply(lambda col: col.str.strip())
 
 df.address = df.address.str.rstrip(",")
 df.energy_label = df.energy_label.str.replace("Energimærke: ", "")
@@ -121,8 +120,7 @@ df.ground_area = df.ground_area.str.replace(" m²","").str.replace("\.","")
 numeric_columns = ["price","price_per_m2","area","rooms", "ground_area", 
                    "year_built", "monthly_cost"]
 df[numeric_columns] = df[numeric_columns]\
-  .apply(lambda col: pd.to_numeric(col, errors="coerce").fillna(0).astype(int)) 
-# to replace the non-numbers/missing info with 0
+  .apply(lambda col: pd.to_numeric(col, errors="coerce").fillna(0).astype(int)) # to replace the non-numbers/missing info with 0
 
 # %% cleaning date values
 def convert_to_date_string(str):
