@@ -1,4 +1,3 @@
-# %%
 import warnings
 warnings.simplefilter(action="ignore", category=FutureWarning)
 import wrangling as w # project module
@@ -8,7 +7,7 @@ import wrangling as w # project module
 # import re
 # import datetime
 
-# %% GATHERING DATA
+# GATHERING DATA
 dict_list = []
 page_num = 1
 pages_count = 1
@@ -25,16 +24,8 @@ while page_num <= pages_count:
                       .find("div", class_="nav-right").a.string)
   page_num+=1
 
-# %% CLEANING DATA
+# CLEANING DATA AND CREATING DATAFRAME
 df = w.create_dataframe(dict_list)
 
-# %% Create CSV file
+# CREATING CSV FILE
 df.to_csv("listings.csv", index=False)
-
-# Each day
-#   Fetch new offers on the website
-#   Extract relevant data from each listing and put in database
-#   Categorise all housing to sold/for sale
-#     Compare list to sold housing page? Or Look for listings that are not there
-#     anymore?
-# %%
