@@ -68,26 +68,10 @@ def append_to_dictlist(tag_list, dict_list):
 
 # %% GATHERING DATA
 dict_list = []
+page_num = 1
+pages_count = 1
 
-## Fetch current HTML content from page 1
-url = 'https://www.boliga.dk/resultat?zipCodes=2720&sort=daysForSale-a&page=1'
-soup = scrape_page(url)
-remove_comments(soup)
-
-## Creating timestamp
-retrieved = datetime.datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
-
-## Extract relevant data from each listing
-tag_list=soup.find_all(is_relevant_listing)
-
-## Making list of dictionaries to name data
-append_to_dictlist(tag_list, dict_list)
-
-## Fetch from the rest of the pages
-pages_count = int(soup.find("app-housing-list-results").find("app-pagination")\
-                      .find("div", class_="nav-right").a.string)
-
-for page_num in range(2, pages_count+1):
+while page_num <= pages_count:
   url= 'https://www.boliga.dk/resultat?zipCodes=2720&sort=daysForSale-a&page={num}'\
     .format(num=page_num)
   soup = scrape_page(url)
@@ -95,6 +79,9 @@ for page_num in range(2, pages_count+1):
   retrieved = datetime.datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
   tag_list=soup.find_all(is_relevant_listing)
   append_to_dictlist(tag_list, dict_list)
+  if page_num == 1:
+    pages_count = int(soup.find("app-housing-list-results").find("app-pagination")\
+                      .find("div", class_="nav-right").a.string)
 
 # %% CLEANING DATA
 df_original = pd.DataFrame(dict_list)
