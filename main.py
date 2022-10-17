@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup, Comment
 import re
 import datetime
 
+# %%
 def scrape_page(url):
   r = requests.get(url)
   return BeautifulSoup(r.content, "lxml")
@@ -35,7 +36,8 @@ def append_to_dictlist(tag_list, dict_list):
     city=address.parent.next_sibling.string
     price=top_info.div.next_sibling.div.contents[1]
     price_per_m2=price.parent.next_sibling.string
-    price_diff=top_info.div.next_sibling.div.find("span", class_="badge").string
+    price_diff_tag=top_info.div.next_sibling.div.find("span", class_="badge")
+    price_diff = price_diff_tag.string if price_diff_tag else "0"
     housing_type = middle_info.find("app-property-label").find("span", class_="text").string
     date_added = middle_info.p.string
     rooms = bottom_info.contents[0].span.string
@@ -53,7 +55,7 @@ def append_to_dictlist(tag_list, dict_list):
         "housing_type": housing_type,
         "price": str(price).replace(u'\xa0', u' '),
         "price_per_m2": str(price_per_m2).replace(u'\xa0', u' '),
-        "price_diff": price_diff,
+        "price_diff%": price_diff,
         "area": area,
         "rooms": rooms,
         "ground_area": ground_area,
@@ -109,6 +111,7 @@ df.energy_label = df.energy_label.str.replace("Energimærke: ", "")
 df.price = df.price.str.replace(" kr\.","").str.replace("\.","")
 df.price_per_m2 = df.price_per_m2.str.replace(" kr\. \/ m²","")\
                                   .str.replace("\.","")
+df["price_diff%"] = df["price_diff%"].str.replace("%","")
 df.area = df.area.str.replace(" m²","")
 df.monthly_cost = df.monthly_cost.str.replace(" kr\. \/ md\.","")\
                                 .str.replace("Ejerudgift: ","")\
