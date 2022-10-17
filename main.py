@@ -32,13 +32,10 @@ def append_to_dictlist(tag_list, dict_list):
     
     link = tag.a['href']
     address=top_info.div.div.span.string
-    #print(address)
     city=address.parent.next_sibling.string
-    #print(city)
     price=top_info.div.next_sibling.div.contents[1]
-    #print(price)
     price_per_m2=price.parent.next_sibling.string
-    #print(price_m2)
+    price_diff=top_info.div.next_sibling.div.find("span", class_="badge").string
     housing_type = middle_info.find("app-property-label").find("span", class_="text").string
     date_added = middle_info.p.string
     rooms = bottom_info.contents[0].span.string
@@ -57,6 +54,7 @@ def append_to_dictlist(tag_list, dict_list):
         "housing_type": housing_type,
         "price": str(price).replace(u'\xa0', u' '),
         "price_per_m2": str(price_per_m2).replace(u'\xa0', u' '),
+        "price_diff": price_diff,
         "area": area,
         "rooms": rooms,
         "ground_area": ground_area,
@@ -102,6 +100,7 @@ df_original = pd.DataFrame(dict_list)
 df = df_original.copy()
 
 df["id"] = df["link"].str.split("/").str[2] # creating column id
+df["status"] = "online"
 
 df = df.apply(lambda col: col.str.strip()) # remove leading and trailing whitespace
 
