@@ -10,3 +10,6 @@
 
 # CSV files
 *.csv
+
+# pycache
+__pycache__
