@@ -84,50 +84,51 @@ while page_num <= pages_count:
                       .find("div", class_="nav-right").a.string)
 
 # %% CLEANING DATA
-df_original = pd.DataFrame(dict_list)
-df = df_original.copy()
+def create_dataframe(dict_list):
+  df = pd.DataFrame(dict_list)
 
-df["id"] = df["link"].str.split("/").str[2]
-df["status"] = "online"
+  df["id"] = df["link"].str.split("/").str[2]
+  df["status"] = "online"
 
-df = df.apply(lambda col: col.str.strip())
+  df = df.apply(lambda col: col.str.strip())
 
-df.address = df.address.str.rstrip(",")
-df.energy_label = df.energy_label.str.replace("Energimærke: ", "")
+  df.address = df.address.str.rstrip(",")
+  df.energy_label = df.energy_label.str.replace("Energimærke: ", "")
 
-df.price = df.price.str.replace(" kr\.","").str.replace("\.","")
-df.price_per_m2 = df.price_per_m2.str.replace(" kr\. \/ m²","")\
+  df.price = df.price.str.replace(" kr\.","").str.replace("\.","")
+  df.price_per_m2 = df.price_per_m2.str.replace(" kr\. \/ m²","")\
+                                    .str.replace("\.","")
+  df["price_diff%"] = df["price_diff%"].str.replace("%","")
+  df.area = df.area.str.replace(" m²","")
+  df.monthly_cost = df.monthly_cost.str.replace(" kr\. \/ md\.","")\
+                                  .str.replace("Ejerudgift: ","")\
+                                  .str.replace("Boligydelse: ","")\
                                   .str.replace("\.","")
-df["price_diff%"] = df["price_diff%"].str.replace("%","")
-df.area = df.area.str.replace(" m²","")
-df.monthly_cost = df.monthly_cost.str.replace(" kr\. \/ md\.","")\
-                                .str.replace("Ejerudgift: ","")\
-                                .str.replace("Boligydelse: ","")\
-                                .str.replace("\.","")
-df.rooms = df.rooms.str.replace("Værelser: ","").str.replace(" værelse","")
-df.ground_area = df.ground_area.str.replace(" m²","").str.replace("\.","")
+  df.rooms = df.rooms.str.replace("Værelser: ","").str.replace(" værelse","")
+  df.ground_area = df.ground_area.str.replace(" m²","").str.replace("\.","")
 
-numeric_columns = ["price","price_per_m2","area","rooms", "ground_area", 
-                   "year_built", "monthly_cost"]
-df[numeric_columns] = df[numeric_columns]\
-  .apply(lambda col: pd.to_numeric(col, errors="coerce").fillna(0).astype(int)) # to replace the non-numbers/missing info with 0
+  numeric_columns = ["price","price_per_m2","area","rooms", "ground_area", 
+                    "year_built", "monthly_cost"]
+  df[numeric_columns] = df[numeric_columns]\
+    .apply(lambda col: pd.to_numeric(col, errors="coerce").fillna(0).astype(int)) # to replace the non-numbers/missing info with 0
 
-# %% cleaning date values
-def convert_to_date_string(str):
-  arr = str.replace("Oprettet ","").replace(".","").split(" ")
-  if (len(arr[0])==1): 
-    arr[0] = "0" + arr[0] # adding a 0 to numbers from 1 to 9
-  
-  months_conversion = {"jan": "01", "feb": "02", "mar": "03", "apr": "04",
-    "maj": "05", "jun": "06", "jul": "07", "aug": "08", "sep":"09", "okt": "10",
-    "nov": "11", "dec": "12"}
-  date = arr[2]+ "-" + months_conversion[arr[1]] + "-" + arr[0]
-  return date
+  def convert_to_date_string(str):
+    arr = str.replace("Oprettet ","").replace(".","").split(" ")
+    if (len(arr[0])==1): 
+      arr[0] = "0" + arr[0] # adding a 0 to numbers from 1 to 9
+    
+    months_conversion = {"jan": "01", "feb": "02", "mar": "03", "apr": "04",
+      "maj": "05", "jun": "06", "jul": "07", "aug": "08", "sep":"09", "okt": "10",
+      "nov": "11", "dec": "12"}
+    date = arr[2]+ "-" + months_conversion[arr[1]] + "-" + arr[0]
+    return date
 
-df.date_added = df.date_added.apply(convert_to_date_string)
-df["date_added"] = df["date_added"].astype("datetime64[ns]")
+  df.date_added = df.date_added.apply(convert_to_date_string)
+  df["date_added"] = df["date_added"].astype("datetime64[ns]")
 
-df["retrieved"] = df["retrieved"].astype("datetime64[ns]")
+  df["retrieved"] = df["retrieved"].astype("datetime64[ns]")
+
+  return df
 
 # %% Create CSV file
 # df.to_csv("20221017_listings.csv", index=False)
