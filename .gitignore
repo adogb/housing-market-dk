@@ -7,3 +7,6 @@
 
 # Source code HTML
 *sourceCode*
+
+# CSV files
+*.csv
