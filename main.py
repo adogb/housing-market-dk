@@ -6,8 +6,6 @@ import requests
 from bs4 import BeautifulSoup, Comment
 import re
 import datetime
-import mysql.connector
-from mysql.connector import Error
 
 def scrape_page(url):
   r = requests.get(url)
@@ -72,7 +70,7 @@ def append_to_dictlist(tag_list, dict_list):
 # %% GATHERING DATA
 dict_list = []
 
-## Fetch current HTML content from website (day 1)
+## Fetch current HTML content from page 1
 url = 'https://www.boliga.dk/resultat?zipCodes=2720&sort=daysForSale-a&page=1'
 soup = scrape_page(url)
 remove_comments(soup)
@@ -86,11 +84,13 @@ tag_list=soup.find_all(is_relevant_listing)
 ## Making list of dictionaries to name data
 append_to_dictlist(tag_list, dict_list)
 
-# %%
-pages_count = int(soup.find("app-housing-list-results").find("app-pagination").find("div", class_="nav-right").a.string)
+## Fetch from the rest of the pages
+pages_count = int(soup.find("app-housing-list-results").find("app-pagination")\
+                      .find("div", class_="nav-right").a.string)
 
 for page_num in range(2, pages_count+1):
-  url= 'https://www.boliga.dk/resultat?zipCodes=2720&sort=daysForSale-a&page={num}'.format(num=page_num)
+  url= 'https://www.boliga.dk/resultat?zipCodes=2720&sort=daysForSale-a&page={num}'\
+    .format(num=page_num)
   soup = scrape_page(url)
   remove_comments(soup)
   retrieved = datetime.datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
@@ -101,16 +101,13 @@ for page_num in range(2, pages_count+1):
 df_original = pd.DataFrame(dict_list)
 df = df_original.copy()
 
-# %% creating column id
-df["id"] = df["link"].str.split("/").str[2]
+df["id"] = df["link"].str.split("/").str[2] # creating column id
 
-# %% remove all leading and trailing whitespace
-df = df.apply(lambda col: col.str.strip())
+df = df.apply(lambda col: col.str.strip()) # remove leading and trailing whitespace
 
-# %% cleaning strings
 df.address = df.address.str.rstrip(",")
 df.energy_label = df.energy_label.str.replace("Energimærke: ", "")
-# %% cleaning numeric values
+
 df.price = df.price.str.replace(" kr\.","").str.replace("\.","")
 df.price_per_m2 = df.price_per_m2.str.replace(" kr\. \/ m²","")\
                                   .str.replace("\.","")
@@ -124,8 +121,8 @@ df.ground_area = df.ground_area.str.replace(" m²","").str.replace("\.","")
 
 numeric_columns = ["price","price_per_m2","area","rooms", "ground_area", 
                    "year_built", "monthly_cost"]
-df[numeric_columns] = df[numeric_columns].apply(lambda col: pd.to_numeric(col, errors="coerce")\
-                                          .fillna(0).astype(int)) 
+df[numeric_columns] = df[numeric_columns]\
+  .apply(lambda col: pd.to_numeric(col, errors="coerce").fillna(0).astype(int)) 
 # to replace the non-numbers/missing info with 0
 
 # %% cleaning date values
@@ -145,8 +142,8 @@ df["date_added"] = df["date_added"].astype("datetime64[ns]")
 
 df["retrieved"] = df["retrieved"].astype("datetime64[ns]")
 
-# %% Create a database MySQL / or CSV file?
-# df.to_csv("20221008_listings.csv", index=False)
+# %% Create CSV file
+# df.to_csv("20221017_listings.csv", index=False)
 
 # Each day
 #   Fetch new offers on the website
