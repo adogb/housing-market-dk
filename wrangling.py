@@ -87,10 +87,12 @@ def create_dataframe(dict_list):
   df.rooms = df.rooms.str.replace("Værelser: ","").str.replace(" værelse","")
   df.ground_area = df.ground_area.str.replace(" m²","").str.replace("\.","")
 
-  numeric_columns = ["price","price_per_m2","area","rooms", "ground_area", 
-                    "year_built", "monthly_cost"]
+  numeric_columns = ["price","price_per_m2","price_diff%","area","rooms",
+  "ground_area", "year_built", "monthly_cost"]
   df[numeric_columns] = df[numeric_columns]\
-    .apply(lambda col: pd.to_numeric(col, errors="coerce").fillna(0).astype(int)) # to replace the non-numbers/missing info with 0
+    .apply(lambda col: pd.to_numeric(col, errors="coerce").fillna(0).astype(int)) 
+    # to replace the non-numbers/missing info with 0
+  df["price_diff%"] = df["price_diff%"]/100
 
   def convert_to_date_string(str):
     arr = str.replace("Oprettet ","").replace(".","").split(" ")
