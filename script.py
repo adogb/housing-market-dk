@@ -26,9 +26,7 @@ while page_num <= pages_count:
 df = w.create_dataframe(dict_list)
 
 # read listings.csv in dataframe master
-df_master = pd.read_csv("listings.csv")
-df_master["date_added"] = df_master["date_added"].astype("datetime64[ns]")
-df_master["retrieved"] = df_master["retrieved"].astype("datetime64[ns]")
+df_master = pd.read_csv("listings.csv", parse_dates=["date_added","retrieved"])
 
 # Treat new listings
 # Treat existing listings
