@@ -13,7 +13,7 @@ page_num = 1
 pages_count = 1
 
 while page_num <= pages_count:
-  url= 'https://www.boliga.dk/resultat?zipCodes=2720&sort=daysForSale-a&page={num}'\
+  url= 'https://www.boliga.dk/resultat?zipCodes=2720&sort=daysForSale-d&page={num}'\
     .format(num=page_num)
   soup, retrieved = w.scrape_page(url)
   w.remove_comments(soup)
