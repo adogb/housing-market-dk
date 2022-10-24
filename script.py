@@ -7,9 +7,12 @@ import pandas as pd
 # import re
 import datetime as dt
 import shutil
+import pathlib
 
 # Archiving existing CSV file
-archive_path = "csv_archive/" + dt.datetime.now().strftime(("%Y%m%d")) + "_listings.csv"
+modified_timestamp = pathlib.Path("listings.csv").stat().st_mtime
+modified_date = dt.date.fromtimestamp(modified_timestamp)
+archive_path = "csv_archive/" + modified_date.strftime(("%Y%m%d")) + "_listings.csv"
 shutil.copy("listings.csv", archive_path)
 
 # Extracting new data
