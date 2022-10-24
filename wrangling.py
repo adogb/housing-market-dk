@@ -87,7 +87,7 @@ def create_dataframe(dict_list):
   df.rooms = df.rooms.str.replace("Værelser: ","").str.replace(" værelse","")
   df.ground_area = df.ground_area.str.replace(" m²","").str.replace("\.","")
 
-  numeric_columns = ["price","price_per_m2","price_diff%","area","rooms",
+  numeric_columns = ["id", "price","price_per_m2","price_diff%","area","rooms",
   "ground_area", "year_built", "monthly_cost"]
   df[numeric_columns] = df[numeric_columns]\
     .apply(lambda col: pd.to_numeric(col, errors="coerce").fillna(0).astype(int)) 
