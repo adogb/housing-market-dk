@@ -35,7 +35,7 @@ while page_num <= pages_count:
 df = w.create_dataframe(dict_list)
 
 # Read existing listings.csv in a dataframe
-df_old = pd.read_csv("listings.csv", parse_dates=["date_added","retrieved"])
+df_old = pd.read_csv("listings.csv", parse_dates=["date_added","retrieved","date_removed"])
 
 # Update still online listings' price reductions
 df = df.set_index("id")
@@ -45,7 +45,9 @@ df_old = df_old.reset_index()
 df = df.reset_index()
 
 # Treat removed listings
-df_old.loc[~df_old["id"].isin(df["id"]),"status"] = "removed"
+mask = ~df_old["id"].isin(df["id"])
+df_old.loc[mask,"status"] = "removed"
+df_old[mask, "date_removed"] = dt.date.today()
 
 # Treat new listings
 latest_retrieved_date = df_old["date_added"].max()
