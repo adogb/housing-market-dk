@@ -6,7 +6,13 @@ import pandas as pd
 # from bs4 import BeautifulSoup, Comment
 # import re
 import datetime as dt
+import shutil
 
+# Archiving existing CSV file
+archive_path = "csv_archive/" + dt.datetime.now().strftime(("%Y%m%d")) + "_listings.csv"
+shutil.copy("listings.csv", archive_path)
+
+# Extracting new data
 dict_list = []
 page_num = 1
 pages_count = 1
