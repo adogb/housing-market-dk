@@ -107,7 +107,12 @@ def create_dataframe(dict_list):
 
   df.date_added = df.date_added.apply(convert_to_date_string)
   df["date_added"] = df["date_added"].astype("datetime64[ns]")
-
   df["retrieved"] = df["retrieved"].astype("datetime64[ns]")
+  df["days_on_sale"] = (df["retrieved"]-df["date_added"]).dt.days
+  df["date_removed"] = pd.NaT
+
+  df = df[["id", "address", "city", "housing_type", "price", "price_per_m2", "price_diff%",\
+    "area", "ground_area", "rooms", "year_built", "energy_label", "monthly_cost",\
+    "date_added", "date_removed", "days_on_sale", "status", "retrieved", "link"]]
 
   return df
