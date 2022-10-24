@@ -17,7 +17,7 @@ while page_num <= pages_count:
     .format(num=page_num)
   soup, retrieved = w.scrape_page(url)
   w.remove_comments(soup)
-  tag_list=soup.find_all(w.is_relevant_listing)
+  tag_list=soup.find("app-housing-list-results").find_all(w.is_relevant_listing)
   w.append_to_dictlist(tag_list, dict_list, retrieved)
   if page_num == 1:
     pages_count = int(soup.find("app-housing-list-results").find("app-pagination")\
