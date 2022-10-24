@@ -47,7 +47,7 @@ df = df.reset_index()
 # Treat removed listings
 mask = ~df_old["id"].isin(df["id"])
 df_old.loc[mask,"status"] = "removed"
-df_old[mask, "date_removed"] = dt.date.today()
+df_old.loc[mask, "date_removed"] = dt.date.today()
 
 # Treat new listings
 latest_retrieved_date = df_old["date_added"].max()
