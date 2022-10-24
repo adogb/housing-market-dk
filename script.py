@@ -5,7 +5,7 @@ import pandas as pd
 # import requests
 # from bs4 import BeautifulSoup, Comment
 # import re
-# import datetime
+import datetime as dt
 
 dict_list = []
 page_num = 1
@@ -20,14 +20,28 @@ while page_num <= pages_count:
   w.append_to_dictlist(tag_list, dict_list, retrieved)
   if page_num == 1:
     pages_count = int(soup.find("app-housing-list-results").find("app-pagination")\
-                      .find("div", class_="nav-right").a.string)
+                          .find("div", class_="nav-right").a.string)
   page_num+=1
 
 df = w.create_dataframe(dict_list)
 
-# read listings.csv in dataframe master
-df_master = pd.read_csv("listings.csv", parse_dates=["date_added","retrieved"])
+# Read existing listings.csv in a dataframe
+df_old = pd.read_csv("listings.csv", parse_dates=["date_added","retrieved"])
+
+# Update still online listings' price reductions
+df = df.set_index("id")
+df_old = df_old.set_index("id")
+df_old["price_diff%"].update(df["price_diff%"]) # update where index (id) match
+df_old = df_old.reset_index()
+df = df.reset_index()
+
+# Treat removed listings
+df_old.loc[~df_old["id"].isin(df["id"]),"status"] = "removed"
 
 # Treat new listings
-# Treat existing listings
-# Treat removed listings
+latest_retrieved_date = df_old["date_added"].max()
+new_listings = df[df["date_added"]>latest_retrieved_date]
+df_new = pd.concat([df_old, new_listings], ignore_index=True, copy=False)
+
+# Write to CSV
+df_new.to_csv("listings.csv", index=False)
