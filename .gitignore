@@ -14,3 +14,6 @@ csv_archive
 
 # pycache
 __pycache__
+
+# Batch files
+*.bat
