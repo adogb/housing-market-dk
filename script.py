@@ -41,6 +41,7 @@ df_old = pd.read_csv("listings.csv", parse_dates=["date_added","retrieved","date
 df = df.set_index("id")
 df_old = df_old.set_index("id")
 df_old["price_diff%"].update(df["price_diff%"]) # update where index (id) match
+df_old["days_on_sale"].update((df["retrieved"]-df["date_added"]).dt.days)
 df_old = df_old.reset_index()
 df = df.reset_index()
 
