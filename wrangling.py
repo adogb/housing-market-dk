@@ -87,12 +87,14 @@ def create_dataframe(dict_list):
   df.rooms = df.rooms.str.replace("Værelser: ","").str.replace(" værelse","")
   df.ground_area = df.ground_area.str.replace(" m²","").str.replace("\.","")
 
-  numeric_columns = ["id", "price","price_per_m2","price_diff%","area","rooms",
-  "ground_area", "year_built", "monthly_cost"]
+  numeric_columns = ["id", "price","price_per_m2", "area","rooms",
+  "ground_area", "monthly_cost"]
   df[numeric_columns] = df[numeric_columns]\
-    .apply(lambda col: pd.to_numeric(col, errors="coerce").fillna(0).astype(int)) 
-    # to replace the non-numbers/missing info with 0
+    .apply(lambda col: pd.to_numeric(col, errors="coerce").astype(int)) 
+    # to replace the non-numbers/missing info with NaN
+  df["price_diff%"] = pd.to_numeric(df["price_diff%"], errors="coerce").fillna(0).astype(int)
   df["price_diff%"] = df["price_diff%"]/100
+  # to replace the non-numbers/missing info with 0
 
   def convert_to_date_string(str):
     arr = str.replace("Oprettet ","").replace(".","").split(" ")
@@ -110,6 +112,7 @@ def create_dataframe(dict_list):
   df["retrieved"] = df["retrieved"].astype("datetime64[ns]")
   df["days_on_sale"] = (df["retrieved"]-df["date_added"]).dt.days
   df["date_removed"] = pd.NaT
+  df["year_built"] = pd.to_datetime(df["year_built"], format="%Y", errors="coerce")
 
   df = df[["id", "address", "city", "housing_type", "price", "price_per_m2", "price_diff%",\
     "area", "ground_area", "rooms", "year_built", "energy_label", "monthly_cost",\
