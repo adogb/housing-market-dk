@@ -35,7 +35,8 @@ while page_num <= pages_count:
 df = w.create_dataframe(dict_list)
 
 # Read existing listings.csv in a dataframe
-df_old = pd.read_csv("listings.csv", parse_dates=["date_added","retrieved","date_removed"])
+df_old = pd.read_csv("listings.csv", parse_dates=["date_added","retrieved",\
+  "date_removed", "year_built"])
 
 # Update still online listings' price reductions
 df = df.set_index("id")
