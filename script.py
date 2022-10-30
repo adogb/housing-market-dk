@@ -47,7 +47,7 @@ df_old = df_old.reset_index()
 df = df.reset_index()
 
 # Treat removed listings
-mask = ~df_old["id"].isin(df["id"])
+mask = (~df_old["id"].isin(df["id"])) & (df_old["status"]=="online")
 df_old.loc[mask,"status"] = "removed"
 df_old.loc[mask, "date_removed"] = dt.date.today()
 
