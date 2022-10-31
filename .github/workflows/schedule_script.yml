@@ -1,7 +1,8 @@
 name: Schedule Python script
-on:
-  schedule:
-    - cron: '30 22 * * *' # 22:30 UTC every day
+on: push
+  # schedule:
+  #   - cron: '30 22 * * *' # 22:30 UTC every day
+
 jobs:
   run-python-script:
     runs-on: ubuntu-latest
