@@ -1,0 +1,22 @@
+name: Schedule Python script
+on:
+  schedule:
+    - cron: '30 22 * * *' # 22:30 UTC every day
+jobs:
+  run-python-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo content
+        uses: actions/checkout@v3 # Check out the repository content to github runner.
+
+      - name: Set up python
+        uses: actions/setup-python@v4 # Install the python version needed
+        with:
+          python-version: '3.8'
+
+      - name: Install Python dependencies
+        # run module pip to install/upgrade pip, pandas and requests
+        run: python -m pip install --upgrade pip pandas requests 
+
+      - name: execute python script
+        run: python script.py 
