@@ -17,7 +17,7 @@ jobs:
 
       - name: Install Python dependencies
         # run module pip to install/upgrade pip, pandas and requests
-        run: python -m pip install --upgrade pip pandas requests 
+        run: python -m pip install --upgrade pip pandas requests bs4
 
       - name: execute python script
         run: python script.py 
