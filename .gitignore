@@ -9,8 +9,8 @@
 *sourceCode*
 
 # CSV files
-# csv_archive
-# *.csv
+csv_archive
+*.csv
 
 # pycache
 __pycache__
