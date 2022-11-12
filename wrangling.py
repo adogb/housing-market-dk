@@ -17,10 +17,15 @@ def remove_comments(soup):
 
 def is_relevant_listing(tag): 
   # find names of tag parents by mapping
-  parentsNames = list(map((lambda x: x.name), tag.parents))
-  is_not_public = tag.find("app-listing-information-hidden")
+  if tag.name == "app-housing-list-item":
+    parentsNames = list(map((lambda x: x.name), tag.parents))
+    is_not_public = tag.find("app-listing-information-hidden")
+    is_foreclosure = tag.find(string="Tvangsauktion")
 
-  return (tag.name == "app-housing-list-item") and not ("ngb-carousel" in parentsNames) and not ("swiper" in parentsNames) and not is_not_public
+    return not ("ngb-carousel" in parentsNames) and not ("swiper" in parentsNames) \
+      and not is_not_public and not is_foreclosure
+  else:
+    return False
 
 def append_to_dictlist(tag_list, dict_list, time_retrieved):
   for tag in tag_list:     
