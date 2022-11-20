@@ -4,6 +4,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup, Comment
 import datetime
+import re
 
 def scrape_page(url):
   r = requests.get(url)
@@ -30,7 +31,7 @@ def append_to_dictlist(tag_list, dict_list, time_retrieved):
   for tag in tag_list:     
     # structuring for code readability
     top_info = tag.find("app-listing-information-lg").div.div
-    middle_info = top_info.next_sibling.next_sibling.div.div
+    middle_info = tag.find("app-listing-information-lg").find("app-property-label").parent
     bottom_info = tag.find(class_="house-details-blocks")
     
     link = tag.a['href']
