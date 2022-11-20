@@ -20,10 +20,9 @@ def is_relevant_listing(tag):
   if tag.name == "app-housing-list-item":
     parentsNames = list(map((lambda x: x.name), tag.parents))
     is_not_public = tag.find("app-listing-information-hidden")
-    is_foreclosure = tag.find(string="Tvangsauktion")
 
     return not ("ngb-carousel" in parentsNames) and not ("swiper" in parentsNames) \
-      and not is_not_public and not is_foreclosure
+      and not is_not_public
   else:
     return False
 
