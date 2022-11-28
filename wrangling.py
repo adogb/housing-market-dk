@@ -75,7 +75,7 @@ def append_to_dictlist(tag_list, dict_list, time_retrieved, status):
 def create_dataframe(dict_list):
   df = pd.DataFrame(dict_list)
 
-  df.id = df.link.str.split("/").str[2]
+  df["id"] = df.link.str.split("/").str[2]
 
   df = df.apply(lambda col: col.str.strip())
 
