@@ -75,7 +75,7 @@ def append_to_dictlist(tag_list, dict_list, time_retrieved, status):
 def create_dataframe(dict_list):
   df = pd.DataFrame(dict_list)
 
-  df["id"] = df["link"].str.split("/").str[2]
+  df.id = df.link.str.split("/").str[2]
 
   df = df.apply(lambda col: col.str.strip())
 
@@ -115,18 +115,18 @@ def create_dataframe(dict_list):
     return date
 
   df.date_added = df.date_added.apply(convert_to_date_string)
-  df["date_added"] = df["date_added"].astype("datetime64[ns]")
+  df.date_added = df.date_added.astype("datetime64[ns]")
 
-  df["retrieved"] = df["retrieved"].astype("datetime64[ns]")
+  df.retrieved = df.retrieved.astype("datetime64[ns]")
 
-  df["date_removed"] = df["date_removed"]\
+  df.date_removed = df.date_removed\
     .str.replace("Ikke længere til salg - sidst set ", "")
-  df["date_removed"] = pd.to_datetime(df["date_removed"], format="%d-%m-%Y", errors="coerce")
+  df.date_removed = pd.to_datetime(df.date_removed, format="%d-%m-%Y", errors="coerce")
 
-  df.loc[df["status"]=="online", "days_on_sale"] = (df["retrieved"]-df["date_added"]).dt.days
-  df.loc[df["status"]=="removed", "days_on_sale"] = (df["date_removed"]-df["date_added"]).dt.days
+  df.loc[df.status=="online", "days_on_sale"] = (df.retrieved-df.date_added).dt.days
+  df.loc[df.status=="removed", "days_on_sale"] = (df.date_removed-df.date_added).dt.days
 
-  df["year_built"] = pd.to_datetime(df["year_built"], format="%Y", errors="coerce")
+  df.year_built = pd.to_datetime(df.year_built, format="%Y", errors="coerce")
 
   df = df[["id", "address", "city", "housing_type", "price", "price_per_m2", "price_diff%",\
     "area", "ground_area", "rooms", "year_built", "energy_label", "monthly_cost",\
