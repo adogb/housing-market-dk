@@ -21,30 +21,28 @@ page_num = 1
 pages_count = 1
 
 while page_num <= pages_count:
-  url= 'https://www.boliga.dk/resultat?zipCodes=2720&sort=daysForSale-d&page={num}'\
+  url= 'https://www.boliga.dk/resultat?propertyType=3,9&hideForclosure=true&'\
+    'sort=daysForSale-d&page={num}'\
     .format(num=page_num)
   soup, retrieved = w.scrape_page(url)
   w.remove_comments(soup)
   tag_list=soup.find("app-housing-list-results").find_all(w.is_relevant_listing)
-  w.append_to_dictlist(tag_list, dict_list, retrieved)
+  w.append_to_dictlist(tag_list, dict_list, retrieved, "online")
   if page_num == 1:
     pages_count = int(soup.find("app-housing-list-results").find("app-pagination")\
                           .find("div", class_="nav-right").a.string)
   page_num+=1
 
 df = w.create_dataframe(dict_list)
+df.set_index("id", inplace=True)
 
 # Read existing listings.csv in a dataframe
-df_old = pd.read_csv("listings.csv", parse_dates=["date_added","retrieved",\
-  "date_removed", "year_built"])
+df_old = pd.read_csv("listings.csv", index_col="id", parse_dates=["date_added",\
+  "retrieved", "date_removed", "year_built"])
 
 # Update still online listings' price reductions
-df.set_index("id", inplace=True)
-df_old.set_index("id", inplace=True)
 df_old["price_diff%"].update(df["price_diff%"]) # update where index (id) match
 df_old["days_on_sale"].update((df["retrieved"]-df["date_added"]).dt.days)
-df_old.reset_index(inplace=True)
-df.reset_index(inplace=True)
 
 # Treat removed listings
 mask = (~df_old["id"].isin(df["id"])) & (df_old["status"]=="online")
@@ -54,7 +52,7 @@ df_old.loc[mask, "date_removed"] = dt.date.today()
 # Treat new listings
 latest_retrieved_date = df_old["date_added"].max()
 new_listings = df[df["date_added"]>latest_retrieved_date]
-df_new = pd.concat([df_old, new_listings], ignore_index=True, copy=False)
+df_new = pd.concat([df_old, new_listings], copy=False)
 
 # Write to CSV
-df_new.to_csv("listings.csv", index=False)
+df_new.to_csv("listings.csv")
