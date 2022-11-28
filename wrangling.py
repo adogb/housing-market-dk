@@ -27,7 +27,7 @@ def is_relevant_listing(tag):
   else:
     return False
 
-def append_to_dictlist(tag_list, dict_list, time_retrieved):
+def append_to_dictlist(tag_list, dict_list, time_retrieved, status):
   for tag in tag_list:     
     # structuring for code readability
     top_info = tag.find("app-listing-information-lg").div.div
@@ -49,6 +49,7 @@ def append_to_dictlist(tag_list, dict_list, time_retrieved):
     year_built = bottom_info.contents[3].span.string
     ground_area = bottom_info.contents[4].span.string
     monthly_cost = bottom_info.contents[5].span.string
+    date_removed = tag.find("app-listing-information-lg").find("span", class_="badge-warning").string if status == "removed" else ""
     
     # appending data dictionnary to dict_list. BeautifulSoup converts HTML non-breaking spaces (&nbsp) to \xa0 (unicode), so we need to remove them.
     dict_list.append({
@@ -66,14 +67,15 @@ def append_to_dictlist(tag_list, dict_list, time_retrieved):
         "year_built": year_built,
         "monthly_cost": monthly_cost,
         "date_added": date_added,
-        "retrieved": time_retrieved
+        "retrieved": time_retrieved,
+        "date_removed": date_removed,
+        "status": status
     })
 
 def create_dataframe(dict_list):
   df = pd.DataFrame(dict_list)
 
   df["id"] = df["link"].str.split("/").str[2]
-  df["status"] = "online"
 
   df = df.apply(lambda col: col.str.strip())
 
@@ -114,9 +116,16 @@ def create_dataframe(dict_list):
 
   df.date_added = df.date_added.apply(convert_to_date_string)
   df["date_added"] = df["date_added"].astype("datetime64[ns]")
+
   df["retrieved"] = df["retrieved"].astype("datetime64[ns]")
-  df["days_on_sale"] = (df["retrieved"]-df["date_added"]).dt.days
-  df["date_removed"] = pd.NaT
+
+  df["date_removed"] = df["date_removed"]\
+    .str.replace("Ikke længere til salg - sidst set ", "")
+  df["date_removed"] = pd.to_datetime(df["date_removed"], format="%d-%m-%Y", errors="coerce")
+
+  df.loc[df["status"]=="online", "days_on_sale"] = (df["retrieved"]-df["date_added"]).dt.days
+  df.loc[df["status"]=="removed", "days_on_sale"] = (df["date_removed"]-df["date_added"]).dt.days
+
   df["year_built"] = pd.to_datetime(df["year_built"], format="%Y", errors="coerce")
 
   df = df[["id", "address", "city", "housing_type", "price", "price_per_m2", "price_diff%",\
