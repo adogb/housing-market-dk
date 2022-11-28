@@ -9,7 +9,7 @@
 *sourceCode*
 
 # CSV files
-csv_archive
+csv_archive*
 *.csv
 
 # pycache
