@@ -31,6 +31,7 @@ while page_num <= pages_count:
   if page_num == 1:
     pages_count = int(soup.find("app-housing-list-results").find("app-pagination")\
                           .find("div", class_="nav-right").a.string)
+  #print(page_num, " done")
   page_num+=1
 
 df = w.create_dataframe(dict_list)
@@ -45,7 +46,7 @@ df_old["price_diff%"].update(df["price_diff%"]) # update where index (id) match
 df_old["days_on_sale"].update((df["retrieved"]-df["date_added"]).dt.days)
 
 # Treat removed listings
-mask = (~df_old["id"].isin(df["id"])) & (df_old["status"]=="online")
+mask = (~df_old.index.isin(df.index)) & (df_old["status"]=="online")
 df_old.loc[mask,"status"] = "removed"
 df_old.loc[mask, "date_removed"] = dt.date.today()
 
