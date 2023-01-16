@@ -22,5 +22,8 @@ while page_last_removal_date >= date_update_from:
   page_num+=1
 
 df_archive = w.create_dataframe(dict_list)
+df_archive.set_index("id", inplace=True)
 
-
+df = pd.read_csv("listings.csv", index_col="id", parse_dates=["date_added",\
+  "retrieved", "date_removed", "year_built"])
+  
