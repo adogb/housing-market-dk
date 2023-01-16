@@ -8,7 +8,7 @@ import pandas as pd
 
 dict_list = []
 page_num = 1
-date_update_from = dt.date(2022, 12, 5) # INPUT DESIRED DATE
+date_update_from = dt.date(2022, 11, 27) # INPUT DESIRED DATE, corresponds to "last seen" date on Boliga
 page_last_removal_date = dt.date.today()
 
 while page_last_removal_date >= date_update_from:
@@ -34,6 +34,8 @@ df = pd.read_csv("listings.csv", index_col="id", parse_dates=["date_added",\
 df["date_removed"].update(df_archive["date_removed"])
 df["status"].update(df_archive["status"])
 df["price_diff%"].update(df_archive["price_diff%"])
+df["price"].update(df_archive["price"])
+df["price_per_m2"].update(df_archive["price_per_m2"])
 df["days_on_sale"].update(df_archive["days_on_sale"])
 
 df.to_csv("listings.csv")
