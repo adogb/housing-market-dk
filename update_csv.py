@@ -1,5 +1,6 @@
 # To update a CSV file that has not been updated for a while for example
-# and where the date_removed is thus wrong by a number of days
+# and where the date_removed is thus wrong by a number of days. This uses the archive
+# so only valid for listings that have been removed
 
 import wrangling as w # project module
 import datetime as dt
