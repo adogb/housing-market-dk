@@ -45,7 +45,7 @@ df_old = pd.read_csv("listings.csv", index_col="id", parse_dates=["date_added",\
 df_old["price_diff%"].update(df["price_diff%"]) # update where index (id) match
 df_old["price"].update(df["price"])
 df_old["price_per_m2"].update(df["price_per_m2"])
-df_old["days_on_sale"].update((df["retrieved"]-df["date_added"]).dt.days)
+df_old["days_on_sale"].update(df["days_on_sale"])
 
 # Treat removed listings
 mask = (~df_old.index.isin(df.index)) & (df_old["status"]=="online")
