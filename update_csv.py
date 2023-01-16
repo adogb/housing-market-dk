@@ -1,10 +1,13 @@
+# To update a CSV file that has not been updated for a while for example
+# and where the date_removed is thus wrong by a number of days
+
 import wrangling as w # project module
 import datetime as dt
 import pandas as pd
 
 dict_list = []
 page_num = 1
-date_update_from = dt.date(2023, 1, 10) # INPUT DESIRED DATE
+date_update_from = dt.date(2022, 12, 5) # INPUT DESIRED DATE
 page_last_removal_date = dt.date.today()
 
 while page_last_removal_date >= date_update_from:
@@ -26,4 +29,10 @@ df_archive.set_index("id", inplace=True)
 
 df = pd.read_csv("listings.csv", index_col="id", parse_dates=["date_added",\
   "retrieved", "date_removed", "year_built"])
-  
+
+df["date_removed"].update(df_archive["date_removed"])
+df["status"].update(df_archive["status"])
+df["price_diff%"].update(df_archive["price_diff%"])
+df["days_on_sale"].update(df_archive["days_on_sale"])
+
+df.to_csv("listings.csv")
