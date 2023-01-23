@@ -80,6 +80,9 @@ def create_dataframe(dict_list):
   df = df.apply(lambda col: col.str.strip())
 
   df.address = df.address.str.rstrip(",")
+  df["postcode"] = df.city.str.split(n=1, expand=True)[0]
+  df.city = df.city.str.split(n=1, expand=True)[1]
+
   df.energy_label = df.energy_label.str.replace("Energimærke: ", "")
 
   df.price = df.price.str.replace(" kr\.","").str.replace("\.","")
@@ -128,8 +131,9 @@ def create_dataframe(dict_list):
 
   df.year_built = pd.to_datetime(df.year_built, format="%Y", errors="coerce")
 
-  df = df[["id", "address", "city", "housing_type", "price", "price_per_m2", "price_diff%",\
-    "area", "ground_area", "rooms", "year_built", "energy_label", "monthly_cost",\
-    "date_added", "date_removed", "days_on_sale", "status", "retrieved", "link"]]
+  df = df[["id", "address", "postcode", "city", "housing_type", "price", "price_per_m2", \
+    "price_diff%", "area", "ground_area", "rooms", "year_built", "energy_label", \
+    "monthly_cost", "date_added", "date_removed", "days_on_sale", "status", \
+    "retrieved", "link"]]
 
   return df
