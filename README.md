@@ -3,6 +3,8 @@
 ## What?
 The project's goal is the creation of an interactive dashboard visualising the current housing market in Denmark. The scope is to create a dashboard updated daily, giving information on listings price evolution.
 
+As of February 2023, the data is for apartments only.
+
 ## Why?
 The aim is to provide users with an overview of the market in a tailored way that common listings websites don't provide. An example of this is that average prices or other information are usually presented at commununal level. Copenhagen commune, as an example, is big (for Denmark) and prices vary a lot depending on neighbourhoods. Getting an average price per square meter for the Copenhagen commune is not useful for a prospective buyer - you could expect to pay 20.000 DKK (~$3200) more or less per square meter for neighbourhoods barely 5 km from one another.
 
