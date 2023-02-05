@@ -1,5 +1,7 @@
 # Housing market in Denmark - dashboard
 
+See [live dashboard](https://public.tableau.com/app/profile/audrey.dogbeh/viz/HousingmarketinDenmark/HousingmarketinDenmarkapartments) on Tableau Public. No account required.
+
 ## What?
 The project's goal is the creation of an interactive dashboard visualising the current housing market in Denmark. The scope is to create a dashboard updated daily, giving information on listings price evolution.
 
@@ -9,7 +11,7 @@ The aim is to provide users with an overview of the market in a tailored way tha
 ## How?
 The project has two main parts:
 - web scraping of housing listings on boliga.dk, using Python and the BeautifulSoup library
-- data visualisation and dashboard: the dashboard is available to see on [Tableau Public](https://public.tableau.com/app/profile/audrey.dogbeh/viz/HousingmarketinDenmark/HousingmarketinDenmarkapartments)
+- data visualisation and dashboard
 
 ## Caveats
 - As of February 2023, data is only related to apartments ("lejlighed" and "villalejlighed"). Boliga.dk does not use weighted area (defined by Finanstilsynet) when calculated the square meter price of a house, which makes it impossible to compare two houses together. I chose therefore not to include houses data in the dataset.
