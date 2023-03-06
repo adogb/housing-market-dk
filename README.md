@@ -11,10 +11,14 @@ The aim is to provide users with an overview of the market in a tailored way tha
 ## How?
 The project has two main parts:
 - web scraping of housing listings on boliga.dk, using Python and the BeautifulSoup library
-- data visualisation and dashboard
+- automation using Windows Task Scheduler
+- data visualisation and dashboard in Tableau
 
 ## Caveats
 - As of February 2023, data is only related to apartments ("lejlighed" and "villalejlighed"). Boliga.dk does not use weighted area (defined by Finanstilsynet) when calculated the square meter price of a house, which makes it impossible to compare two houses together. I chose therefore not to include houses data in the dataset.
-- Data is not representative of the full housing sales picture in Denmark. Since data is scraped from a housing sales website, it only includes properties that are made public. A lot of properties are indeed sold having never been made public.
+- Data is not representative of the full housing sales picture in Denmark. Since data is scraped from a housing sales website, it only includes property sales that are made public. A lot of properties are indeed sold having never been made public.
 - There can be small discrepancies in the date a property is put on sale or sold/removed from the website, which are dependant on how quickly the website publishes listings.
+- Automation via Windows Task Scheduler is practical but not ideal. I would like to
+avoid having to leave my computer on sleep mode for it to work. In March 2023,
+I am looking into ways to take the automation online.
 
