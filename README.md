@@ -1,12 +1,14 @@
 # Housing market in Denmark - dashboard
 
-See [live dashboard](https://public.tableau.com/app/profile/audrey.dogbeh/viz/HousingmarketinDenmark/HousingmarketinDenmarkapartments) on Tableau Public. No account required.
+▶ See [live dashboard](https://public.tableau.com/app/profile/audrey.dogbeh/viz/HousingmarketinDenmark/HousingmarketinDenmarkapartments) on Tableau Public. No account required.
 
 ## What?
-The project's goal is the creation of an interactive dashboard visualising the current housing market in Denmark. The scope is to create a dashboard updated daily, giving information on listings price evolution.
+I created a Tableau dashboard showing the state of real estate property sales in Denmark since January 2020. The dashboard makes it possible to dig into data at postal code level.
 
 ## Why?
-The aim is to provide users with an overview of the market in a tailored way that common listings websites don't provide. An example of this is that average prices or other information are usually presented at commununal level. Copenhagen commune, as an example, is big (for Denmark) and prices vary a lot depending on neighbourhoods. Getting an average price per square meter for the Copenhagen commune is not useful for a prospective buyer - you could expect to pay 20.000 DKK (~$3200) more or less per square meter for neighbourhoods barely 5 km from one another.
+The aim of this visualisation is to provide users with an overview of the market in a granular way that common listings websites don't provide. 
+
+I was looking to buy an apartment in 2020 and trying to get an overview of square meter prices by neighbourhood in Copenhagen. However, I could mostly find average prices at communal level. Copenhagen commune, as an example, is big (for Denmark) and prices vary a lot depending on neighbourhoods. Getting an average price per square meter for the Copenhagen commune is not useful for a prospective buyer - square meter prices can vary by 30.000 DKK for neighbourhoods barely 5 km from one another. 
 
 ## How?
 The project has two main parts:
