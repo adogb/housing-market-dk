@@ -49,7 +49,7 @@ def append_to_dictlist(tag_list, dict_list, time_retrieved, status):
     year_built = bottom_info.contents[3].span.string
     ground_area = bottom_info.contents[4].span.string
     monthly_cost = bottom_info.contents[5].span.string
-    date_removed = tag.find("app-listing-information-lg").find("span", class_="badge-warning").string if status == "removed" else ""
+    date_removed = tag.find("app-listing-information-lg").find("span", class_="bg-warning").string if status == "removed" else ""
     
     # appending data dictionnary to dict_list. BeautifulSoup converts HTML non-breaking spaces (&nbsp) to \xa0 (unicode), so we need to remove them.
     dict_list.append({
