@@ -1,5 +1,5 @@
 # To update a CSV file that has not been updated for a while for example
-# and where the date_removed is thus wrong by a number of days. This uses the archive
+# and where the date_removed is thus wrong by a number of days. Run script.py first to retrieve all newest listings. This uses the archive
 # so only valid for listings that have been removed. To update all the other listings, use
 # script.py.
 
@@ -9,7 +9,7 @@ import pandas as pd
 
 dict_list = []
 page_num = 1
-date_update_from = dt.date(2023, 5, 10) # INPUT DESIRED DATE, corresponds to "last seen" date on Boliga
+date_update_from = dt.date(2023, 5, 20) # INPUT DESIRED DATE, corresponds to "last seen" date on Boliga
 page_last_removal_date = dt.date.today()
 
 while page_last_removal_date >= date_update_from:
